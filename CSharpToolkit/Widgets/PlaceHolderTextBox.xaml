@@ -1,0 +1,123 @@
+﻿<TextBox
+    x:Class="CSharpToolkit.Widgets.PlaceHolderTextBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:widgets="clr-namespace:CSharpToolkit.Widgets"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    Loaded="PlaceHolderTextBox_OnLoaded"
+    Style="{DynamicResource DefaultTextBox}"
+    TextChanged="TextBox_TextChanged"
+    mc:Ignorable="d">
+    <TextBox.Resources>
+        <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABADB3" />
+        <Style x:Key="DefaultTextBox" TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+            <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}" />
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="AllowDrop" Value="True" />
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst" />
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate x:Name="DefaultTextBoxTemplate" TargetType="{x:Type TextBox}">
+                        <Border
+                            x:Name="TextBoxBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{Binding Path=(widgets:PlaceHolderTextBox.BorderCornerRadius), RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                            SnapsToDevicePixels="True">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <!--
+                                    类似于“PART_***”的名称，这些名称都不能随意更改，这是WPF内置的特殊名称，
+                                    比如ScrollViewer的“PART_ContentHost”名称，就是表示这个控件是用于装载TextBox的文本内容的，
+                                    虽说它是表示用于装载TextBox的文本内容的，但PART_ContentHost不能作为TextBox的名称，
+                                    并且经过测试，这个名称只能用于ScrollViewer或者Adorner、Decorator控件
+                                -->
+                                <ScrollViewer
+                                    x:Name="PART_ContentHost"
+                                    Grid.Column="0"
+                                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                    VerticalAlignment="Center"
+                                    Focusable="False"
+                                    HorizontalScrollBarVisibility="Hidden"
+                                    VerticalScrollBarVisibility="Hidden" />
+
+                                <TextBlock
+                                    x:Name="PlaceHolderTextBlock"
+                                    Grid.Column="0"
+                                    Margin="0"
+                                    Padding="{Binding PlaceHolderPadding, RelativeSource={RelativeSource AncestorType=TextBox, Mode=FindAncestor}}"
+                                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                    VerticalAlignment="Center"
+                                    FocusVisualStyle="{x:Null}"
+                                    FontSize="{TemplateBinding FontSize}"
+                                    Foreground="LightGray"
+                                    Text="{Binding Path=(widgets:PlaceHolderTextBox.HintText), RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                                    Visibility="Hidden" />
+
+                                <!--
+                                    符号'/'表示当前程序集根路径，符号'#'是引用外部字体的固定标识，"iconfont"表示字体的名字
+                                    FontFamily内容格式一般可以为"/命名空间;component/[路径]#[字体名称]"
+                                -->
+                                <Button
+                                    Grid.Column="1"
+                                    Width="30"
+                                    Height="30"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    BorderThickness="0"
+                                    Click="ClearButton_OnClick"
+                                    Content="&#xe670;"
+                                    FontFamily="/IconFont/#iconfont"
+                                    FontSize="20"
+                                    Foreground="Black"
+                                    Visibility="{Binding Path=(widgets:PlaceHolderTextBox.IsClearButtonVisible), RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="PlaceHolderTextBlock" Property="Visibility" Value="Visible" />
+                            </Trigger>
+
+                            <Trigger Property="Text" Value="{x:Null}">
+                                <Setter TargetName="PlaceHolderTextBlock" Property="Visibility" Value="Visible" />
+                            </Trigger>
+
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="TextBoxBorder" Property="Opacity" Value="0.5" />
+                            </Trigger>
+
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="TextBoxBorder" Property="BorderBrush" Value="{Binding Path=MouseOverBorderColor, RelativeSource={RelativeSource AncestorType={x:Type widgets:PlaceHolderTextBox}}}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="True" />
+                        <Condition Property="IsSelectionActive" Value="False" />
+                    </MultiTrigger.Conditions>
+
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" />
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+    </TextBox.Resources>
+</TextBox>
