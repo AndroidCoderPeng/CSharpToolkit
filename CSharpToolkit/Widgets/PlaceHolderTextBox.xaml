@@ -80,7 +80,7 @@
                                     BorderThickness="0"
                                     Click="ClearButton_OnClick"
                                     Content="&#xe670;"
-                                    FontFamily="/IconFont/#iconfont"
+                                    FontFamily="/CSharpToolkit;component/FontResource/#iconfont"
                                     FontSize="20"
                                     Foreground="Black"
                                     Visibility="{Binding Path=(widgets:PlaceHolderTextBox.IsClearButtonVisible), RelativeSource={RelativeSource Mode=TemplatedParent}}" />
