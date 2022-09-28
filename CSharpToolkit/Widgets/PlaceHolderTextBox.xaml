@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:widgets="clr-namespace:CSharpToolkit.Widgets"
-    d:DesignHeight="300"
+    d:DesignHeight="30"
     d:DesignWidth="300"
     Loaded="PlaceHolderTextBox_OnLoaded"
     Style="{DynamicResource DefaultTextBox}"
